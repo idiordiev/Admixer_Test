@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Admixer_Test", "Admixer_Test\Admixer_Test.csproj", "{D5FE01A5-98A7-41E4-853C-7EAF67267600}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Admixer_Test.Tests", "Admixer_Test.Tests\Admixer_Test.Tests.csproj", "{A3C889B0-C112-422E-A880-28F9EC7BAB52}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D5FE01A5-98A7-41E4-853C-7EAF67267600}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5FE01A5-98A7-41E4-853C-7EAF67267600}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5FE01A5-98A7-41E4-853C-7EAF67267600}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5FE01A5-98A7-41E4-853C-7EAF67267600}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3C889B0-C112-422E-A880-28F9EC7BAB52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3C889B0-C112-422E-A880-28F9EC7BAB52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3C889B0-C112-422E-A880-28F9EC7BAB52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3C889B0-C112-422E-A880-28F9EC7BAB52}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
