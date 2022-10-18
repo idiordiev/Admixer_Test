@@ -12,7 +12,7 @@ namespace Admixer_Test.Interfaces
         bool CheckForSequencesInRows(Matrix matrix);
         void RemoveSequencesInColumns(Matrix matrix);
         void RemoveSequencesInRows(Matrix matrix);
-        void ShiftRows(Matrix matrix);
+        void ShiftEmptyValues(Matrix matrix);
         void FillEmptySpaces(Matrix matrix);
     }
 }

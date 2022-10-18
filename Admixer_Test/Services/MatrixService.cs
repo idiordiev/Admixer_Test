@@ -8,7 +8,6 @@ namespace Admixer_Test.Services
     {
         private readonly IRandomService _randomService;
 
-
         public event EventHandler<MatrixEventArgs> MatrixEvent;
 
         public MatrixService(IRandomService randomService)
@@ -19,9 +18,13 @@ namespace Admixer_Test.Services
         public Matrix GenerateMatrix()
         {
             var matrix = new Matrix(9, 9);
-            for (var i = 0; i < matrix.Rows; i++)
-            for (var j = 0; j < matrix.Columns; j++)
-                matrix[i, j] = _randomService.GetRandomInt(0, 3);
+            for (int i = 0; i < matrix.Rows; i++)
+            {
+                for (int j = 0; j < matrix.Columns; j++)
+                {
+                    matrix[i, j] = _randomService.GetRandomInt(0, 3);
+                }
+            }
 
             MatrixEvent?.Invoke(this, new MatrixEventArgs { Message = "The new matrix has been generated.", Matrix = matrix });
             return matrix;
@@ -29,32 +32,34 @@ namespace Admixer_Test.Services
 
         public bool CheckForSequencesInColumns(Matrix matrix)
         {
-            for (var column = 0; column < matrix.Columns; column++)
-                if (IndexOfSequenceInColumn(matrix, column) >= 0)
+            for (int column = 0; column < matrix.Columns; column++)
+            {
+                if (GetIndexOfSequenceInColumn(matrix, column) >= 0)
                     return true;
+            }
 
             return false;
         }
 
-        private int IndexOfSequenceInColumn(Matrix matrix, int columnIndex)
+        private int GetIndexOfSequenceInColumn(Matrix matrix, int column)
         {
-            for (var rowIndex = 0; rowIndex < matrix.Rows; rowIndex++)
+            for (int row = 0; row < matrix.Rows; row++)
             {
-                var sequenceLength = GetSequenceLengthInColumn(matrix, rowIndex, columnIndex);
+                var sequenceLength = GetSequenceLengthInColumn(matrix, row, column);
 
                 if (sequenceLength >= 3)
-                    return rowIndex;
+                    return row;
             }
 
             return -1;
         }
 
-        private int GetSequenceLengthInColumn(Matrix matrix, int rowIndex, int columnIndex)
+        private int GetSequenceLengthInColumn(Matrix matrix, int rowStart, int column)
         {
             var sequenceLength = 1;
-            for (var k = rowIndex + 1; k < matrix.Rows; k++)
+            for (int row = rowStart + 1; row < matrix.Rows; row++)
             {
-                if (matrix[k, columnIndex] >= 0 && matrix[k, columnIndex] == matrix[k - 1, columnIndex])
+                if (matrix[row, column] >= 0 && matrix[row, column] == matrix[row - 1, column])
                     sequenceLength++;
                 else
                     break;
@@ -65,16 +70,18 @@ namespace Admixer_Test.Services
 
         public bool CheckForSequencesInRows(Matrix matrix)
         {
-            for (var row = 0; row < matrix.Rows; row++)
-                if (IndexOfSequenceInRow(matrix, row) >= 0)
+            for (int row = 0; row < matrix.Rows; row++)
+            {
+                if (GetIndexOfSequenceInRow(matrix, row) >= 0)
                     return true;
+            }
 
             return false;
         }
 
-        private int IndexOfSequenceInRow(Matrix matrix, int rowIndex)
+        private int GetIndexOfSequenceInRow(Matrix matrix, int rowIndex)
         {
-            for (var columnIndex = 0; columnIndex < matrix.Columns; columnIndex++)
+            for (int columnIndex = 0; columnIndex < matrix.Columns; columnIndex++)
             {
                 var sequenceLength = GetSequenceLengthInRow(matrix, rowIndex, columnIndex);
 
@@ -85,63 +92,75 @@ namespace Admixer_Test.Services
             return -1;
         }
 
-        private static int GetSequenceLengthInRow(Matrix matrix, int rowIndex, int columnIndex)
+        private int GetSequenceLengthInRow(Matrix matrix, int row, int columnStart)
         {
             var sequenceLength = 1;
-            for (var k = columnIndex + 1; k < matrix.Columns; k++)
-                if (matrix[rowIndex, k] >= 0 && matrix[rowIndex, k] == matrix[rowIndex, k - 1])
+            for (int column = columnStart + 1; column < matrix.Columns; column++)
+            {
+                if (matrix[row, column] >= 0 && matrix[row, column] == matrix[row, column - 1])
                     sequenceLength++;
                 else
                     break;
+            }
 
             return sequenceLength;
         }
 
         public void RemoveSequencesInColumns(Matrix matrix)
         {
-            for (var column = 0; column < matrix.Columns; column++)
+            for (int column = 0; column < matrix.Columns; column++)
             {
-                var rowIndex = IndexOfSequenceInColumn(matrix, column);
-                if (rowIndex < 0)
+                var rowStart = GetIndexOfSequenceInColumn(matrix, column);
+                if (rowStart < 0)
                     continue;
 
-                var sequenceLength = GetSequenceLengthInColumn(matrix, rowIndex, column);
+                var sequenceLength = GetSequenceLengthInColumn(matrix, rowStart, column);
                 if (sequenceLength < 3)
                     continue;
 
-                for (int k = rowIndex; k < rowIndex + sequenceLength; k++)
-                    matrix[k, column] = -1;
+                RemoveSequenceFromColumn(matrix, column, rowStart, sequenceLength);
                 
                 MatrixEvent?.Invoke(this, new MatrixEventArgs { Message = $"Concurrences in column {column} has been removed. ", Matrix = matrix });
             }
         }
 
+        private void RemoveSequenceFromColumn(Matrix matrix, int column, int rowStart, int sequenceLength)
+        {
+            for (int row = rowStart; row < rowStart + sequenceLength; row++)
+                matrix[row, column] = -1;
+        }
+
         public void RemoveSequencesInRows(Matrix matrix)
         {
-            for (var row = 0; row < matrix.Rows; row++)
+            for (int row = 0; row < matrix.Rows; row++)
             {
-                var columnIndex = IndexOfSequenceInRow(matrix, row);
-                if (columnIndex < 0)
+                var columnStart = GetIndexOfSequenceInRow(matrix, row);
+                if (columnStart < 0)
                     continue;
 
-                var sequenceLength = GetSequenceLengthInRow(matrix, row, columnIndex);
+                var sequenceLength = GetSequenceLengthInRow(matrix, row, columnStart);
                 if (sequenceLength < 3)
                     continue;
 
-                for (var k = columnIndex; k < columnIndex + sequenceLength; k++)
-                    matrix[row, k] = -1;
+                RemoveSequenceFromRow(matrix, row, columnStart, sequenceLength);
                 
                 MatrixEvent?.Invoke(this, new MatrixEventArgs { Message = $"Concurrences in row {row} has been removed. ", Matrix = matrix });
             }
         }
 
-        public void ShiftRows(Matrix matrix)
+        private void RemoveSequenceFromRow(Matrix matrix, int row, int columnStart, int sequenceLength)
+        {
+            for (int column = columnStart; column < columnStart + sequenceLength; column++)
+                matrix[row, column] = -1;
+        }
+
+        public void ShiftEmptyValues(Matrix matrix)
         {
             for (int iteration = 0; iteration < matrix.Rows; iteration++)
             {
-                for (var row = 1; row < matrix.Rows; row++)
+                for (int row = 1; row < matrix.Rows; row++)
                 {
-                    for (var column = 0; column < matrix.Columns; column++)
+                    for (int column = 0; column < matrix.Columns; column++)
                     {
                         if (matrix[row, column] < 0)
                             (matrix[row, column], matrix[row - 1, column]) = (matrix[row - 1, column], matrix[row, column]);
@@ -154,10 +173,14 @@ namespace Admixer_Test.Services
 
         public void FillEmptySpaces(Matrix matrix)
         {
-            for (var i = 0; i < matrix.Rows; i++)
-                for (var j = 0; j < matrix.Columns; j++)
+            for (int i = 0; i < matrix.Rows; i++)
+            {
+                for (int j = 0; j < matrix.Columns; j++)
+                {
                     if (matrix[i, j] < 0)
                         matrix[i, j] = _randomService.GetRandomInt(0, 3);
+                }
+            }
 
             MatrixEvent?.Invoke(this, new MatrixEventArgs { Message = "The matrix has been refilled.", Matrix = matrix });
         }

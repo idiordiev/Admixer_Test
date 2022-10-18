@@ -29,18 +29,18 @@ namespace Admixer_Test
                 var matrix = service.GenerateMatrix();
                 while (true)
                 {
-                    var isConcurrencesInRows = service.CheckForSequencesInRows(matrix);
-                    if (isConcurrencesInRows)
+                    var isSequencesInRows = service.CheckForSequencesInRows(matrix);
+                    if (isSequencesInRows)
                         service.RemoveSequencesInRows(matrix);
                 
-                    var isConcurrencesInColumns = service.CheckForSequencesInColumns(matrix);
-                    if (isConcurrencesInColumns)
+                    var isSequencesInColumns = service.CheckForSequencesInColumns(matrix);
+                    if (isSequencesInColumns)
                         service.RemoveSequencesInColumns(matrix);
                 
-                    if (!isConcurrencesInColumns && !isConcurrencesInRows)
+                    if (!isSequencesInColumns && !isSequencesInRows)
                         break;
                 
-                    service.ShiftRows(matrix);
+                    service.ShiftEmptyValues(matrix);
                     service.FillEmptySpaces(matrix);
                 }
 

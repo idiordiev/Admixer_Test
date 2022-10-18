@@ -208,7 +208,7 @@ namespace Admixer_Test.Tests
         }
 
         [Test]
-        public void ShiftRows_NothingToShift_NoChanges()
+        public void ShiftEmptyValues_NothingToShift_NoChanges()
         {
             // Arrange
             var actual = new Matrix(new[,] 
@@ -228,14 +228,14 @@ namespace Admixer_Test.Tests
             _service = new MatrixService(_randomService.Object);
             
             // Act
-            _service.ShiftRows(actual);
+            _service.ShiftEmptyValues(actual);
 
             // Assert
             Assert.AreEqual(expected, actual, "The actual matrix is not equal to expected.");
         }
 
         [Test]
-        public void ShiftRows_OneRowNeedToBeShifted_ShiftsValuesToTheUpperRow()
+        public void ShiftEmptyValues_OneRowNeedToBeShifted_ShiftsValuesToTheUpperRow()
         {
             // Arrange
             var actual = new Matrix(new[,] 
@@ -255,14 +255,14 @@ namespace Admixer_Test.Tests
             _service = new MatrixService(_randomService.Object);
             
             // Act
-            _service.ShiftRows(actual);
+            _service.ShiftEmptyValues(actual);
 
             // Assert
             Assert.AreEqual(expected, actual, "The actual matrix is not equal to expected.");
         }
 
         [Test]
-        public void ShiftRows_MultipleRowsNeedToBeShifted_ShiftsValuesToTheUpperRows()
+        public void ShiftEmptyValues_MultipleRowsNeedToBeShifted_ShiftsValuesToTheUpperRows()
         {
             // Arrange
             var actual = new Matrix(new[,] 
@@ -282,7 +282,7 @@ namespace Admixer_Test.Tests
             _service = new MatrixService(_randomService.Object);
             
             // Act
-            _service.ShiftRows(actual);
+            _service.ShiftEmptyValues(actual);
 
             // Assert
             Assert.AreEqual(expected, actual, "The actual matrix is not equal to expected.");
