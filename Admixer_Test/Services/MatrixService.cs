@@ -120,7 +120,7 @@ namespace Admixer_Test.Services
 
                 RemoveSequenceFromColumn(matrix, column, rowStart, sequenceLength);
                 
-                MatrixEvent?.Invoke(this, new MatrixEventArgs { Message = $"Concurrences in column {column} has been removed. ", Matrix = matrix });
+                MatrixEvent?.Invoke(this, new MatrixEventArgs { Message = $"Sequence in column {column} has been removed. ", Matrix = matrix });
             }
         }
 
@@ -144,7 +144,7 @@ namespace Admixer_Test.Services
 
                 RemoveSequenceFromRow(matrix, row, columnStart, sequenceLength);
                 
-                MatrixEvent?.Invoke(this, new MatrixEventArgs { Message = $"Concurrences in row {row} has been removed. ", Matrix = matrix });
+                MatrixEvent?.Invoke(this, new MatrixEventArgs { Message = $"Sequence in row {row} has been removed. ", Matrix = matrix });
             }
         }
 
